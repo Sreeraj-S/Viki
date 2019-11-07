@@ -9,17 +9,44 @@ import pynput
 from pynput.keyboard import Key, Controller as KeyboardController
 from pynput.mouse import Button, Controller as MouseController
 import time
+from gtts import gTTS
+import numpy
+import cv2
+import pickle
+import requests
+import random
+import threading
+
+
+global recog_name
+recog_name = ""
 
 intents={"intents":[
-    {"tag":"greetings",
+    {
+    "tag":"greetings",
     "patterns":["hi","how are you","is anyone there","hello"],
     "responese":["Hello","Great","Hi there, How can i help you"],
     "context_set":""
     },
-    {"tag":"goodbye",
+    {
+    "tag":"goodbye",
     "patterns":["tata","goodbye","see you later"],
     "responese":["Sad to See you go","Take to later","Goodbye","Bye"],
-    "context_set":""}]}
+    "context_set":""
+    },
+    {
+    #"tag":"marry"
+    "patterns":["will you marry me"],
+    "responese":["srry it is chemically not possible"]
+    },
+    {
+    "patterns":["i love you","i like you"],
+    "responese":["i like you too","me too But lets be Friends"]
+    },
+    {
+    "patterns":[""]
+    }
+]}
 
 keyboard = KeyboardController()
 mouse = MouseController()
@@ -39,11 +66,62 @@ voices = engine.getProperty('voices')
 print(voices[1].id)
 engine.setProperty('voice', voices[1].id)
 
+wish_me=[]
+face_dic =  ["hi","hey","sup","how are you","how may i help you"]
+
+cap=cv2.VideoCapture(0)
+
+def face_recog():
+    
+    
+    face_cascade = cv2.CascadeClassifier('F:\\sreeraj\\viki\\cascade\\data\\haarcascade_frontalface_alt2.xml')
+    recognizer=cv2.face.LBPHFaceRecognizer_create()
+    recognizer.read("trainner.yml")
+    
+    labels={}
+    with open("labels.pickle",'rb') as f:
+        og_labels = pickle.load(f)
+        labels = {v:k for k,v in og_labels.items()}
+    while True:
+        ret,frame = cap.read()
+        gray = cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
+        faces = face_cascade.detectMultiScale(gray,scaleFactor=1.5,minNeighbors=5)
+        
+        for (x,y,w,h) in faces:
+                #print(x,y,w,h)
+            roi_gray = gray [y:y+h, x:x+w]
+            roi_colour = frame[y:y+h, x:x+w]
+
+            id_,conf = recognizer.predict(roi_gray)
+            if conf>=45 and conf<=85:
+
+                font = cv2.FONT_HERSHEY_COMPLEX
+                recog_name=labels[id_]
+                colour = (255,255,255)
+                stroke = 2
+                cv2.putText(frame,name,(x,y),font,1,colour,stroke,cv2.LINE_AA)
+                
+               
+
+                img_items = "my_image.png"
+                cv2.imwrite(img_items, roi_gray)
+
+                color = (255,0,0)
+                stroke=2
+                end_x=x+w
+                end_y=y+h
+                cv2.rectangle(frame,(x,y),(end_x,end_y),color,stroke)
+
+        cv2.imshow("frame",frame)
+        if cv2.waitKey(20) & 0xff == ord('q'):
+            break
+    cap.release()
+    cv2.destroyAllWindows()
+
 
 def speak(audio):
     engine.say(audio)
     engine.runAndWait()
-
 
 def wishMe():
     hour = int(datetime.datetime.now().hour)
@@ -105,13 +183,28 @@ def sendEmail(to, content):
 
 if __name__ == "__main__":
     wishMe()
+    thread = threading.Thread(target=face_recog)
+    thread.start()
     while True:
-        Wish =takeCommand().lower()
+        
+        if recog_name != "":
+            
+            if recog_name not in wish_me:
+                a = random.choices(face_dic)
+                speak(f"{a}{recog_name}")
+                wish_me=[]
+                wish_me.append(recog_name)
+
+        #Wish =takeCommand().lower()
+        Wish=input("wake me")
+        for i in range(len(intents["intents"])):
+            if Wish in intents["intents"][i]["patterns"]:
+                speak(random.choice(intents["intents"][i]["responese"]))
         if 'wiki' in Wish:
             speak("yes sir")
             for Repeat in range(3):
-                query = takeCommand().lower()
-            
+                #query = takeCommand().lower()
+                query = input("type:")
                 if 'wikipedia' in query:
                     speak('Searching Wikipedia...')
                     query = query.replace("wikipedia", "")
@@ -119,16 +212,19 @@ if __name__ == "__main__":
                     speak("According to Wikipedia")
                     print(results)
                     speak(results)
+                    break
 
                 elif 'open youtube' in query:
                     webbrowser.open("youtube.com")
+                    break
 
                 elif 'open google' in query:
                     webbrowser.open("google.com")
+                    break
 
                 elif 'open stackoverflow' in query:
-                    webbrowser.open("stackoverflow.com")   
-
+                    webbrowser.open("stackoverflow.com")
+                    break   
 
                 elif 'play' in query or 'music' in query:
                     if 'play music' in query:
@@ -141,6 +237,7 @@ if __name__ == "__main__":
                         time.sleep(5)
                         #mouse.position = (337, 387)
                         #mouse.click(Button.left,1)
+                        break
                     else:
                         choose=query.replace("play ","")
                         webbrowser.open("https://www.youtube.com/results?search_query="+choose)
@@ -150,9 +247,16 @@ if __name__ == "__main__":
                         time.sleep(5)
                         #mouse.position = (337, 387)
                         #mouse.click(Button.left,1)
+                        break
                 elif 'joke' in query:
                     res = requests.get('https://icanhazdadjoke.com/',headers={"Accept":"application/json"}
                 )       
+                    if res.status_code == requests.codes.ok:
+                        joke = str(res.json()['joke'])
+                        speak(joke)
+                    else:
+                        speak('oops!I ran out of jokes')
+                    break
 
                 elif 'the time' in query:
                     strTime = datetime.datetime.now().strftime("%H:%M:%S")    
@@ -211,3 +315,5 @@ if __name__ == "__main__":
                         quit()
                     elif 'no'==content or 'nah'==content:
                         pass
+cap.release()
+cv2.destroyAllWindows()
