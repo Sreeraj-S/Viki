@@ -16,7 +16,7 @@ import requests
 import random
 import threading
 import serial
-import viki
+import Viki_gui
 
 
 
