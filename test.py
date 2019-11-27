@@ -1,183 +1,51 @@
-import pyttsx3 #pip install pyttsx3
-import speech_recognition as sr #pip install speechRecognition
-import datetime
-import wikipedia #pip install wikipedia
-import webbrowser
-import os
-import smtplib
-import pynput
-from pynput.keyboard import Key, Controller as KeyboardController
-from pynput.mouse import Button, Controller as MouseController
-import time
+d1,d2,d3,d4,d5,d6,d7,d8=0,0,0,0,0,0,0,0
 
-keyboard = KeyboardController()
-mouse = MouseController()
-
-email={"sreeraj":"sathishranji1@gmail.com","nikhil":"nikhilkartha724@gmail.com","rishi":"hrishikeshms1020@gmail.com","akshith":"akshithrajeev77@gmail.com"}
-
-engine = pyttsx3.init('sapi5')
-voices = engine.getProperty('voices')
-# print(voices[1].id)
-engine.setProperty('voice', voices[0].id)
-
-
-def speak(audio):
-    engine.say(audio)
-    engine.runAndWait()
-
-
-def wishMe():
-    hour = int(datetime.datetime.now().hour)
-    if hour>=0 and hour<12:
-        speak("Good Morning!")
-
-    elif hour>=12 and hour<18:
-        speak("Good Afternoon!")   
-
-    else:
-        speak("Good Evening!")  
-
-    speak("I am Viki Sir. Please tell me how may I help you")       
-
-def takeCommand():
-    #It takes microphone input from the user and returns string output
-
-    r = sr.Recognizer()
-    with sr.Microphone() as source:
-        print("Listening...")
-        r.pause_threshold = 1
-        audio = r.listen(source)
-
-    try:
-        print("Recognizing...")    
-        query = r.recognize_google(audio, language='en-in')
-        print(f"User said: {query}\n")
-
-    except Exception as e:
-        # print(e)    
-        print("Say that again please...")  
-        return "None"
-    return query
-
-def WakeUp():
-    r = sr.Recognizer()
-    with sr.Microphone() as source:
-        print("Listening...")
-        r.pause_threshold = 1
-        audio = r.listen(source)
-
-    try:    
-        print('recognising')
-        query = r.recognize_google(audio, language='en-in')
-        print(f"User said: {query}\n")
-
-    except Exception as e:
-        print(e)    
-          
-        return "None"
-    return query
-
-def sendEmail(to, content):
-    server = smtplib.SMTP('smtp.gmail.com', 587)
-    server.ehlo()
-    server.starttls()
-    server.login('ai.assistant101@gmail.com', 'VIKI1209')
-    server.sendmail('ai.assistant101@gmail.com', to, content)
-    server.close()
-
-if __name__ == "__main__":
-    wishMe()
-    while True:
-        Wish = WakeUp().lower()
-        if 'wiki' in Wish:
-            speak("yes sir")
-            query = takeCommand().lower()
-            for Repeat in range(3):
-                if 'wikipedia' in query:
-                    speak('Searching Wikipedia...')
-                    query = query.replace("wikipedia", "")
-                    results = wikipedia.summary(query, sentences=2)
-                    speak("According to Wikipedia")
-                    print(results)
-                    speak(results)
-
-                elif 'open youtube' in query:
-                    webbrowser.open("youtube.com")
-
-                elif 'open google' in query:
-                    webbrowser.open("google.com")
-
-                elif 'open stackoverflow' in query:
-                    webbrowser.open("stackoverflow.com")   
-
-
-                elif 'play' in query or 'music' in query:
-                    if 'play music' in query:
-                        speak("which song")
-                        choose=takeCommand()
-                        webbrowser.open("https://www.youtube.com/results?search_query="+choose)
-                        time.sleep(10)
-                        mouse.position = (405, 325)
-                        mouse.click(Button.left,1)
-                        time.sleep(5)
-                        #mouse.position = (337, 387)
-                        #mouse.click(Button.left,1)
-                    else:
-                        choose=query.replace("play ","")
-                        webbrowser.open("https://www.youtube.com/results?search_query="+choose)
-                        time.sleep(10)
-                        mouse.position = (405, 325)
-                        mouse.click(Button.left,1)
-                        time.sleep(5)
-                        #mouse.position = (337, 387)
-                        #mouse.click(Button.left,1)
-                        
-
-                elif 'the time' in query:
-                    strTime = datetime.datetime.now().strftime("%H:%M:%S")    
-                    speak(f"Sir, the time is {strTime}")
-
-                elif 'open code' in query:
-                    codePath = "C:\\Users\\Lenovo\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"
-                    os.startfile(codePath)
-
-                elif 'send email' in query:
-                    try:
-                        speak("What should I say?")
-                        content = takeCommand()
-                        speak("To whom Should I send?")
-                        to=takeCommand().lower()
-                        if "@gmail.com" in to:   
-                            sendEmail(to, content)
-                            speak("Email has been sent!")
-                            break
-                        else:
-                            if to in email.keys():
-                                repeat=0
-                                while repeat == 0:
-                                    to=email[to]
-                                    if to in "none":
-                                        pass
-                                    else:
-                                        repeat+=1
-                                sendEmail(to, content)
-                                speak("Email has been sent!")
-                                break
-                            else:
-                                speak("Sorry sir.There is no One in this name stored")
-                                speak("please tell me the email id")
-                                to=takeCommand().lower()
-                                sendEmail(to, content)
-                                speak("Email has been sent!")
-                                break
-                    except Exception as e:
-                        print(e)
-                        speak("Sorry sir  I am not able to send this email") 
-                elif 'shutdown wiki' in query:
-                    speak('are you sure')
-                    content=takeCommand()
-                    if 'yes'==content or 'sure' == content:
-                        speak('bye')
-                        quit()
-                    elif 'no'==content or 'nah'==content:
-                        pass
+ch=['0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
+total=''
+while True:
+    di=[d8,d7,d6,d5,d4,d3,d2,d1]
+    n=0
+    for i in range(8):
+        total+=ch[di[i]]
+    print(total)
+    total=''
+    if d1==61 and d2==61 and d3==61 and d4==61 and d5==61 and d6==61 and d7==61 and d8==61:
+        break
+    elif d1==61 and d2==61 and d3==61 and d4==61 and d5==61 and d6==61 and d7==61:
+        d1,d2,d3,d4,d5,d6,d7=0,0,0,0,0,0,0
+        d8+=1
+        n=1
+        #print('j')
+    elif d1==61 and d2==61 and d3==61 and d4==61 and d5==61 and d6==61:
+        d1,d2,d3,d4,d5,d6=0,0,0,0,0,0
+        d7+=1
+        n=1
+        #print('l')
+    elif d1==61 and d2==61 and d3==61 and d4==61 and d5==61:
+        d1,d2,d3,d4,d5=0,0,0,0,0
+        d6+=1
+        n=1
+        #print('m')
+    elif d1==61 and d2==61 and d3==61 and d4==61:
+        d1,d2,d3,d4=0,0,0,0
+        d5+=1
+        n=1
+        #print('f')
+    elif d1==61 and d2==61 and d3==61:
+        d1,d2,d3=0,0,0
+        d4+=1
+        n=1
+        #print('g')
+    elif d1==61 and d2==61:
+        d1,d2=0,0
+        d3+=1
+        n=1
+        #print('q')
+    elif d1==61:
+        d1=0
+        d2+=1
+        n=1
+        #print('v')
+    if n==0:
+        d1+=1
+    
