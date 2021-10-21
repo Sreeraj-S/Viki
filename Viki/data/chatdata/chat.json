@@ -1,0 +1,36 @@
+{"intents":[
+    {
+    "tag":"greetings",
+    "patterns":["hi","is anyone there","hello"],
+    "responese":["Hello","Hi there, How can i help you"],
+    "context_set":""
+    },
+    {
+    "tag":"goodbye",
+    "patterns":["tata","goodbye","see you later"],
+    "responese":["Sad to See you go","Talk to you later","Goodbye","Bye"],
+    "context_set":""
+    },
+    {
+    "tag":"marry",
+    "patterns":["will you marry me"],
+    "responese":["srry it is biologicaly not possible","srry it is physically not possible","srry it is chemically not possible"]
+    },
+    {
+    "patterns":["i love you","i like you"],
+    "responese":["i like you too","me too But lets be Friends"]
+    },
+    {
+    "patterns":["who are u"],
+    "responese":["I am Viki,An AI"]
+    },
+    {
+    "patterns":["how are you","you good"],
+    "responese":["great,U need help","fine","thats so nice of you,I am fine"]
+    },
+    {
+    "patterns":["thank you"],
+    "responese":["YOur welcome,I am always there for you"]
+    }
+
+]}
