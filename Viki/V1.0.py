@@ -1,11 +1,15 @@
 from sys import modules
+from playsound import playsound
+
 import pyttsx3
 import speech_recognition as sr
 import datetime
+
 from modules.wikipedia.wikipedia_module import wiki
 from modules.apps import train as software_train,software
 from modules.jokes.joke import jokes
-from modules.music.main import searchVideoID
+from modules.music.main import searchVideoID, openVideo
+#from modules.chatbot import training as chatbot_train, chatbot
 
 engine = pyttsx3.init('sapi5')
 voices = engine.getProperty('voices')
@@ -51,6 +55,7 @@ def takeCommand():
 
 def WakeUp():
     r = sr.Recognizer()
+    #print(sr.Microphone.list_microphone_names())
     with sr.Microphone() as source:
         print("Wake me..")
         r.pause_threshold = 0.5
@@ -69,17 +74,48 @@ def WakeUp():
     return query
 
 if __name__ == "__main__":
-    
     Wish=''
     wishMe()
     while True:
         if not "viki" == Wish:
             Wish = WakeUp().lower()
         if 'wiki' in Wish or 'viki' == Wish:
-            speak("hey there")
+            playsound("data\\audiodata\\wakeUp.wav")
             query = takeCommand().lower()
             if 'wikipedia' in query:
                 speak('Searching Wikipedia...')
                 query = query.replace("wikipedia", "")
                 speak(wiki(query))
+            elif 'open ' in query:
+                query = query.replace("open ", "")
+                rtn = software.open_Software(query)
+                if rtn is not list:
+                    speak(rtn)
+                else:
+                    speak('Found multiple application. Which one do you like to open?')
+                    for i in range(0,len(rtn)):
+                        speak(f"{i}+1. {rtn[i]}")
+                        if i == 3:
+                            break
+                    query = takeCommand().lower()
+                    if query.isalpha:
+                        break
+                    else:
+                        speak(software.sel_Software(rtn, query-1))
+            elif "show software" in query:
+                print(software.show_Software())
+            elif 'play ' in query:
+                speak("Playing...")
+                videoID = searchVideoID(query.replace("play", ""))
+                openVideo(videoID)
+            elif 'command train' == query or 'relearn data' == query or 'learn data' == query :
+                software_train.train()
+                #chatbot_train.train()
+            elif 'shutdown' == query:
+                speak('Power Off, Bye')
+                break
+            else:
+                pass
+                """response = chatbot.request(query)
+                speak(response)"""
     

@@ -1,36 +1,40 @@
 {"intents":[
     {
     "tag":"greetings",
-    "patterns":["hi","is anyone there","hello"],
-    "responese":["Hello","Hi there, How can i help you"],
-    "context_set":""
+    "patterns": ["Hi there", "How are you", "Is anyone there?","Hey","Hola", "Hello", "Good day"],
+    "response": ["Hello, thanks for asking", "Good to see you again", "Hi there, how can I help?"]
     },
     {
     "tag":"goodbye",
-    "patterns":["tata","goodbye","see you later"],
-    "responese":["Sad to See you go","Talk to you later","Goodbye","Bye"],
-    "context_set":""
+    "patterns": ["Bye", "See you later", "Goodbye", "Nice chatting to you, bye", "Till next time"],
+    "response": ["See you!", "Have a nice day", "Bye! Come back again soon."]
     },
     {
     "tag":"marry",
     "patterns":["will you marry me"],
-    "responese":["srry it is biologicaly not possible","srry it is physically not possible","srry it is chemically not possible"]
+    "response":["srry it is biologicaly not possible","srry it is physically not possible","srry it is chemically not possible"]
     },
     {
+    "tag":"other",
     "patterns":["i love you","i like you"],
-    "responese":["i like you too","me too But lets be Friends"]
+    "response":["i like you too","me too But lets be Friends"]
     },
     {
-    "patterns":["who are u"],
-    "responese":["I am Viki,An AI"]
+    "tag":"name",
+    "patterns":["who are you"],
+    "response":["I am Viki,An AI"]
     },
     {
+    "tag":"social",
     "patterns":["how are you","you good"],
-    "responese":["great,U need help","fine","thats so nice of you,I am fine"]
+    "response":["great,U need help","fine","thats so nice of you,I am fine"]
     },
-    {
-    "patterns":["thank you"],
-    "responese":["YOur welcome,I am always there for you"]
+    {"tag":"thanks",
+    "patterns": ["Thanks", "Thank you", "That's helpful", "Awesome, thanks", "Thanks for helping me"],
+    "response": ["Happy to help!", "Any time!", "My pleasure"]
+    },
+    {"tag": "noanswer",
+    "patterns": [],
+    "response": ["Sorry, can't understand you", "Please give me more info", "Not sure I understand"]
     }
-
 ]}

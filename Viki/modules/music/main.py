@@ -15,6 +15,8 @@ def searchVideoID(query):
         )
     response = request.execute()
     return response['items'][0]['id']['videoId']
+def openVideo(videoID):
+    webbrowser.open(f'https://www.youtube.com/watch?v={videoID}')
 
 if __name__ == "__main__":
     #print(searchVideoID('end of times by alan walker'))
