@@ -39,7 +39,7 @@ For the project roadmap and planned features, please refer to the [PROJECT.md](P
 
 ## Contact
 
-For inquiries or collaboration opportunities, please contact [Sreeraj S](github.com/sreeraj-s) at [Gmail](sreerajs1063@gmail.com) - sreerajs1063@gmail.com.
+For inquiries or collaboration opportunities, please contact [Sreeraj S](https://github.com/sreeraj-s) at [Gmail](sreerajs1063@gmail.com) - sreerajs1063@gmail.com.
 
 ## License
 
