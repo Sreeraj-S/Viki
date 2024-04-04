@@ -21,7 +21,7 @@ import serial
 listuser={}
 
 #root = Viki_gui.Gui()
-init_bg = ['F:\\sreeraj\\viki\\initpic\\Init0.png','F:\\sreeraj\\viki\\initpic\\Init.0.png','F:\\sreeraj\\viki\\initpic\\Init..0.png','F:\\sreeraj\\viki\\initpic\\Init...0.png','F:\\sreeraj\\viki\\initpic\\Init.1.png','F:\\sreeraj\\viki\\initpic\\Init..1.png']
+# init_bg = ['F:\\sreeraj\\viki\\initpic\\Init0.png','F:\\sreeraj\\viki\\initpic\\Init.0.png','F:\\sreeraj\\viki\\initpic\\Init..0.png','F:\\sreeraj\\viki\\initpic\\Init...0.png','F:\\sreeraj\\viki\\initpic\\Init.1.png','F:\\sreeraj\\viki\\initpic\\Init..1.png']
 
 
 try:
